@@ -45,8 +45,8 @@ std::list<Channel>::iterator Server::check_Channel(std::string chName)
 
 int Server::accept_client(void)
 {
-	struct sockaddr_in sclient; // 클라이언트의 주소를 저장하는 구조체
-	socklen_t sclient_len = sizeof(sclient);
+	struct sockaddr_in sclient;													 // 클라이언트의 주소를 저장하는 구조체
+	socklen_t sclient_len = sizeof(sclient);									 // 주소의 길이를 저장. 함수의 3번째 인자로 넘겨주기 위함
 	int clientFd = accept(_serverFd, (struct sockaddr *)&sclient, &sclient_len); // 클라이언트의 접속을 기다리는 함수. 2번째 인자는 클라이언트의 주소를 저장하는 구조체
 	if (clientFd == -1)															 // 클라이언트의 접속을 기다리다가 에러가 발생했을 경우
 	{
