@@ -81,7 +81,6 @@ int Server::read_client(int fd)
 		std::memset(_saveBuf[fd], 0, BUF * 2);
 		std::strcat(_saveBuf[fd], "QUIT :disconnected\r\n");
 		std::cout << "========== recv client " << fd << " ==========\n";
-		std::cout << "확인3" << std::endl;
 		std::cout << _saveBuf[fd] << "\n\n";
 		execute_command(fd);
 		set_pollFd(fd, -1, 0, 0);
@@ -92,7 +91,6 @@ int Server::read_client(int fd)
 	{
 		std::strcat(_saveBuf[fd], _readBuf);
 		std::cout << "========== recv client " << fd << " ==========\n";
-		std::cout << "확인4" << std::endl;
 		std::cout << _saveBuf[fd] << "\n\n";
 		execute_command(fd);
 		_poll[fd].revents = 0;
@@ -105,11 +103,9 @@ int Server::read_client(int fd)
 
 void Server::execute_command(int fd)
 {
-	Command com(_saveBuf[fd]); // 클라이언트 소켓에서 읽어온 데이터를 command객체의 splitmsg변수에 저장해 놓고 타입검사를 한후
-	std::cout << "확인1" << std::endl;
+	Command com(_saveBuf[fd]);		// 클라이언트 소켓에서 읽어온 데이터를 command객체의 splitmsg변수에 저장해 놓고 타입검사를 한후
 	int type = com.check_msgType(); // 그 결과를 받아서 대응되는 명령어함수 호출
-	std::cout << "확인2" << std::endl;
-	_cit = get_clientFd(fd); // fd에 대응되는 클라이언트 객체를 받아온뒤
+	_cit = get_clientFd(fd);		// fd에 대응되는 클라이언트 객체를 받아온뒤
 	switch (type)
 	{
 	case CONNECT:
@@ -118,46 +114,46 @@ void Server::execute_command(int fd)
 	case PASS:
 		com.pass((*_cit), _pwd, _clients);
 		break;
-	case JOIN:
-		com.join((*_cit), _channels);
-		break;
-	/*case PART:
-		com.part((*_cit), _channels);
-		break;*/
-	case INVITE:
-		com.invite((*_cit), _channels, _clients);
-		break;
-	case KICK:
-		com.kick((*_cit), _channels);
-		break;
 	case NICK:
 		com.nick((*_cit), _clients, _channels);
 		break;
 	case USER:
 		com.user((*_cit));
 		break;
+	case INVITE:
+		com.invite((*_cit), _channels, _clients);
+		break;
+	case JOIN:
+		com.join((*_cit), _channels);
+		break;
+	case PART:
+		com.part((*_cit), _channels);
+		break;
+	case KICK:
+		com.kick((*_cit), _channels);
+		break;
 	case LIST:
 		com.list((*_cit), _channels);
 		break;
-	/*case QUIT:
+	case QUIT:
 		com.quit(_cit, _channels, _clients);
-		break;*/
+		break;
 	case PING:
 		com.ping((*_cit));
 		break;
-	/*case OP:
+	case OP:
 		com.op((*_cit), _channels);
 		break;
 	case DEOP:
 		com.deop((*_cit), _channels);
-		break;*/
+		break;
 	case PRIVMSG:
 		com.privmsg((*_cit), _clients);
 		break;
 	case PRIVCH:
 		com.privmsg((*_cit), _channels);
 		break;
-	/*case NOTICE:
+	case NOTICE:
 		com.notice((*_cit), _clients);
 		break;
 	case NOTICE_CH:
@@ -168,9 +164,8 @@ void Server::execute_command(int fd)
 		break;
 	case MODE_N:
 		com.modeN((*_cit), _channels);
-		break;*/
+		break;
 	default:
-		std::cout << "확인5" << std::endl;
 		break;
 	}
 }

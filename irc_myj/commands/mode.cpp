@@ -5,7 +5,7 @@ bool Command::is_completed(const Client &sender)
     return sender.get_status() == COMPLETED;
 }
 
-bool Command::is_validMessage()
+bool Command::is_validSize()
 {
     return _splitMsg.size() >= 2;
 }
@@ -20,7 +20,7 @@ int Command::modeI(const Client &sender)
 
 int Command::modeN(const Client &sender, const std::list<Channel> &chList)
 {
-    if (!is_validMessage() || !is_completed(sender))
+    if (!is_validSize() || !is_completed(sender))
         return (-1);
     std::string chName = _splitMsg[1];
     int cFd = sender.get_fd();

@@ -81,7 +81,11 @@ void Channel::op_user(const std::string &nick)
 {
     if (check_client_in_ch(nick))
     {
-        _userModes.insert(std::make_pair(nick, OPER));
+        std::map<std::string, int>::iterator it = _userModes.find(nick);
+        if (it != _userModes.end())
+        {
+            it->second = OPER;
+        }
     }
 }
 
@@ -89,7 +93,11 @@ void Channel::deop_user(const std::string &nick)
 {
     if (check_client_in_ch(nick))
     {
-        _userModes.insert(std::make_pair(nick, NORMAL));
+        std::map<std::string, int>::iterator it = _userModes.find(nick);
+        if (it != _userModes.end())
+        {
+            it->second = NORMAL;
+        }
     }
 }
 bool Channel::already_exists(const std::string &nick)

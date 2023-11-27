@@ -12,6 +12,10 @@ SRC = main.cpp \
       Channel.cpp
 
 SRC_CMD = commands/pass.cpp \
+          commands/mode.cpp \
+          commands/op.cpp   \
+          commands/part.cpp \
+          commands/notice.cpp \
           commands/nick.cpp \
           commands/user.cpp \
           commands/join.cpp \

@@ -30,7 +30,7 @@ int Command::nick(Client &client, std::list<Client> &cList, const std::list<Chan
 	{
 		if (check_nick(nickName, cList, cFd) == -1)
 		{
-			if (check_dupNick(nickName, cList) != cList.end())
+			if (check_validClient(nickName, cList) != cList.end())
 			{
 				client.set_flag(DUPDUP);
 				if (_splitMsg.size() > i + 2 && _splitMsg[i + 2].compare("USER") == 0)

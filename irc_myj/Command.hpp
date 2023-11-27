@@ -12,12 +12,12 @@
 
 #define CONNECT 1
 #define PASS 2
-#define JOIN 3
-#define PART 4
+#define NICK 3
+#define USER 4
 #define INVITE 5
 #define KICK 6
-#define NICK 7
-#define USER 8
+#define JOIN 7
+#define PART 8
 #define LIST 9
 #define QUIT 10
 #define PING 11
@@ -47,7 +47,7 @@ public:
     void send_fd(int fd, std::string str);
     void send_all(std::vector<int> fds, std::string str);
     std::list<Channel>::const_iterator check_validChannel(const std::string chName, const std::list<Channel> &chList);
-    std::list<Client>::const_iterator check_dupNick(const std::string nick, const std::list<Client> &cList);
+    std::list<Client>::const_iterator check_validClient(const std::string nick, const std::list<Client> &cList);
     int check_validNick(const std::string nick);
     int check_nick(std::string nickName, std::list<Client> &cList, int fd);
 
@@ -79,8 +79,8 @@ public:
 
     int modeI(const Client &sender);
     int modeN(const Client &sender, const std::list<Channel> &chList);
-    bool Command::is_completed(const Client &sender);
-    bool Command::is_validMessage();
+    bool is_completed(const Client &sender);
+    bool is_validSize();
 };
 
 #endif

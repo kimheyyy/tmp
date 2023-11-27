@@ -40,7 +40,7 @@ void Command::split_msg(void)
 
 int Command::check_msgType(void)
 {
-	std::string typeList[] = {"CONNECT", "PASS", "JOIN", "PART", "INVITE", "KICK", "NICK", "USER", "LIST", "QUIT", "PING", "MODE", "PRIVMSG", "NOTICE"};
+	std::string typeList[] = {"CONNECT", "PASS", "NICK", "USER", "INVITE", "KICK", "JOIN", "PART", "LIST", "QUIT", "PING", "MODE", "PRIVMSG", "NOTICE"};
 
 	for (size_t i = 0; i < sizeof(typeList) / sizeof(std::string); i++)
 	{
@@ -111,7 +111,7 @@ std::list<Channel>::const_iterator Command::check_validChannel(const std::string
 	return (_conChit);
 }
 
-std::list<Client>::const_iterator Command::check_dupNick(const std::string nick, const std::list<Client> &cList)
+std::list<Client>::const_iterator Command::check_validClient(const std::string nick, const std::list<Client> &cList)
 {
 	for (_conCit = cList.begin(); _conCit != cList.end(); _conCit++)
 	{
@@ -123,7 +123,7 @@ std::list<Client>::const_iterator Command::check_dupNick(const std::string nick,
 
 int Command::check_validNick(const std::string nick)
 {
-	std::string cmdList[] = {"CONNECT", "PASS", "JOIN", "PART", "INVITE", "KICK", "NICK", "USER", "LIST", "WHOIS", "QUIT", "PING", "MODE", "PRIVMSG", "NOTICE"};
+	std::string cmdList[] = {"CONNECT", "PASS", "JOIN", "PART", "INVITE", "KICK", "NICK", "USER", "LIST", "QUIT", "PING", "MODE", "PRIVMSG", "NOTICE"};
 	for (size_t i = 0; i < sizeof(cmdList) / sizeof(std::string); i++)
 	{
 		if (nick.compare(cmdList[i]) == 0)
@@ -144,7 +144,7 @@ int Command::check_nick(std::string nickName, std::list<Client> &cList, int cFd)
 		send_fd(cFd, ERR_NONICKNAMEGIVEN);
 		return (-1);
 	}
-	if (check_dupNick(nickName, cList) != cList.end()) // 중복검사
+	if (check_validClient(nickName, cList) != cList.end()) // 중복검사
 	{
 		send_fd(cFd, ERR_NICKNAMEINUSE(nickName));
 		return (-1);

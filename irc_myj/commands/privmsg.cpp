@@ -7,11 +7,10 @@ int Command::privmsg(const Client &sender, const std::list<Client> &cList)
 		return (-1);
 	else if (sender.get_status() != COMPLETED)
 	{
-		std::cout << "확인" << std::endl;
 		return (-1);
 	}
 	std::string cName = _splitMsg[1];
-	_conCit = check_dupNick(cName, cList);
+	_conCit = check_validClient(cName, cList);
 	if (_conCit == cList.end())
 	{
 		send_fd(sender.get_fd(), ERR_NOSUCHNICK(sender.get_nick(), cName));

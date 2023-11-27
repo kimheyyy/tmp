@@ -16,7 +16,7 @@ int Command::invite(const Client &client,std::list<Channel> &chList, const std::
 		send_fd(client.get_fd(), ERR_CHANOPRIVSNEEDED(client.get_nick(), chName));
 		return (-1);
 	}
-	_conCit = check_dupNick(_splitMsg[1], cList);
+	_conCit = check_validClient(_splitMsg[1], cList);
 	if (_conCit == cList.end()) {
 		send_fd(client.get_fd(), ERR_NOSUCHNICK(client.get_nick(), target));
 		return (-1);
