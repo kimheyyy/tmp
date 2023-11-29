@@ -60,33 +60,33 @@ int Server::accept_client(void)
 	}
 	set_pollFd(clientFd, clientFd, POLLIN | POLLHUP, 0); // 3번째 인자는 해당 파일디스크립터에서 발생 할 수 있는 이벤트
 	_poll[_serverFd].revents = 0;						 // 수행한 이벤트는 제거
-	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1)
-		; // 해당 파일디스크립터가 블로킹 되지않도록 설정
+	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1)//입력으로 들어온 소켓(디스크립터) 블로킹(대기상태) 되지 않도록 처리
+		;										   //해당 소켓의 read,write작업시 스레드나 프로세스는 다른 작업을 계속 진행가능
 	return (1);
 }
 
 int Server::read_client(int fd)
 {
-	std::memset(_readBuf, 0, BUF);
-	int r = recv(fd, _readBuf, BUF, MSG_DONTWAIT); // 논블로킹으로 입력으로 들어온 fd(소켓)의 데이터를 버퍼로 읽어옴
-	if (r < 0)
+	std::memset(_readBuf, 0, BUF);//버퍼 초기화
+	int r = recv(fd, _readBuf, BUF, MSG_DONTWAIT); // 논블로킹MSG_DONTWAIT 으로 입력으로 들어온 fd(소켓)의 데이터를 버퍼로 읽어옴
+	if (r < 0)//소켓에서 데이터를 읽어오는데 오류가 있을시
 	{
 		std::cout << "Error: read fail\n";
 		close(fd);
 		set_pollFd(fd, -1, 0, 0);
 		return (-1);
 	}
-	else if (r == 0)
+	else if (r == 0)//클라이언트가 연결을 종료한 경우
 	{
 		std::memset(_saveBuf[fd], 0, BUF * 2);
 		std::strcat(_saveBuf[fd], "QUIT :disconnected\r\n");
 		std::cout << "========== recv client " << fd << " ==========\n";
 		std::cout << _saveBuf[fd] << "\n\n";
 		execute_command(fd);
-		set_pollFd(fd, -1, 0, 0);
+		set_pollFd(fd, -1, 0, 0);//해당 소켓의 파일디스크립터를 무효화,감시 그리고 발생이벤트가 없는것으로 설정해둠
 		std::memset(_saveBuf[fd], 0, BUF * 2);
 		return (1);
-	} // 제대로 읽은 경우
+	} // 데이터의 끝에 해당 문자들이 r,n이 있는지(메시지 수신이 완료) 확인
 	if (_readBuf[r - 2] == '\r' && _readBuf[r - 1] == '\n')
 	{
 		std::strcat(_saveBuf[fd], _readBuf);
@@ -95,7 +95,7 @@ int Server::read_client(int fd)
 		execute_command(fd);
 		_poll[fd].revents = 0;
 		std::memset(_saveBuf[fd], 0, BUF * 2);
-	} // 제대로 읽지 않은경우는 일단 저장해놓고
+	} // 메시지 수신이 완료되지 않은경우
 	else
 		std::strcat(_saveBuf[fd], _readBuf);
 	return (1);

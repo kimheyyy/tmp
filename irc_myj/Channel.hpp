@@ -31,6 +31,7 @@ public:
     void rm_user(const std::string &nick);
     int rm_byNick(const std::string &nick);
 
+	/* getter */
     int get_userSize() const;
     std::string get_usersNames() const;
     std::vector<int> get_fds(int senderFd) const;

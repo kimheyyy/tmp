@@ -10,6 +10,7 @@
 #include "Channel.hpp"
 #include "Define.hpp"
 
+/* command number */
 #define CONNECT 1
 #define PASS 2
 #define NICK 3
@@ -55,7 +56,7 @@ public:
     void remove_channel(std::list<Channel> &chList, std::string name);
     void welcome_msg(Client &client);
 
-    // command list
+    /* command list */
     int connect(int fd, std::string pwd, std::list<Client> &cList);
     int pass(Client &client, std::string pwd, std::list<Client> &cList);
     int join(const Client &client, std::list<Channel> &chList);

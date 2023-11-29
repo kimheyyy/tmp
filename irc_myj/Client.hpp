@@ -20,12 +20,13 @@ class Client {
 
     public:
         Client(std::string nick, std::string user, std::string ip, int fd, int flag);
-        //set
+        /* set */
         void                set_nick(std::string nick);
         void                set_flag(int flag);
         void                set_ip(std::string ip);
         void                set_user(std::string user);
-        //get
+        
+		/* getter */
         const std::string   get_nick() const;
         const std::string   get_user() const;
         const std::string   get_ip() const;

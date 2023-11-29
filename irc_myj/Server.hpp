@@ -40,11 +40,14 @@ public:
     int accept_client(void);
     int read_client(int fd);
     void execute_command(int fd);
-
+	
+	/* getter */
     struct pollfd *get_poll(void);
     int get_serverFd(void);
+	std::list<Client>::iterator get_clientFd(int fd);
+	
+	/*stter*/
     void set_pollFd(int index, int fd, int events, int revents);
-    std::list<Client>::iterator get_clientFd(int fd);
 };
 
 #endif
