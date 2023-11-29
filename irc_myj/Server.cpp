@@ -6,56 +6,51 @@ Server::Server(int portNum, std::string pwd)
 	_pwd = pwd;
 	try
 	{
-		if ((_serverFd = socket(PF_INET, SOCK_STREAM, 0)) == -1)
+		if ((_serverFd = socket(PF_INET, SOCK_STREAM, 0)) == -1) // 소켓을 생성함 PF_INET은 IPv4 인터넷 프로토콜을 사용하겠다는 의미. SOCK_STREAM은 TCP를 사용하겠다는 의미
 			throw std::runtime_error("Socket open failed");
 
-		_serverSin.sin_family = AF_INET;
-		_serverSin.sin_addr.s_addr = INADDR_ANY;
-		_serverSin.sin_port = htons(portNum); // 포트번호로서 바이트오더?로 변환하기위해 htons함수를 사용함
+		_serverSin.sin_family = AF_INET;		 // 주소체계를 IPv4로 설정. AF_INET은 IPv4 인터넷 프로토콜을 사용하겠다는 의미
+		_serverSin.sin_addr.s_addr = INADDR_ANY; // 서버의 IP주소를 자동으로 찾아서 설정. INADDR_ANY는 서버의 IP주소를 자동으로 찾아서 설정
+		_serverSin.sin_port = htons(portNum);	 // 포트번호를 설정. 포트번호는 2바이트이므로 htons()를 사용해서 리틀엔디안을 빅엔디안으로 바꿔줌 0x1234(2byte) -> 0x3412(2byte)
 
-		socklen_t _serverSinLen = sizeof(_serverSin);
+		socklen_t _serverSinLen = sizeof(_serverSin); // 주소의 길이를 저장하는 변수 선언 socklen_t는 부호없는 정수형
 
-		if (bind(_serverFd, (struct sockaddr *)&_serverSin, _serverSinLen) == -1) // 소켓에 주소와 포트번호를 바인딩함
+		if (bind(_serverFd, (struct sockaddr *)&_serverSin, _serverSinLen) == -1) // bind()는 소켓에 주소, 포트번호를 할당하는 함수
 			throw std::runtime_error("Bind failed");
 
-		if (listen(_serverFd, 42) == -1) // 운영체제에게 해당 소캣으로 클라이언트의 요청을 받을준비가 되었다고 알림
+		if (listen(_serverFd, 42) == -1) // listen()은 소켓을 서버 소켓으로 설정하고 클라이언트의 접속을 기다리는 함수. 2번째 인자는 클라이언트의 최대 접속 수
 			throw std::runtime_error("Listen failed");
 
-		set_pollFd(_serverFd, _serverFd, POLLIN, 0); // pollfd 구조체를 설정하는 작업 1번째인자는 인덱스로서 두번째는 구초체의 fd값으,3번째는 구조체의 event값으로 설정
-		for (int i = _serverFd + 1; i < USER_MAX; i++)
-			set_pollFd(i, -1, 0, 0);				  // 사용되지 않는 구조체는 무효한 파일디스크립터(-1)로처리
-		std::memset(_saveBuf, 0, BUF * 2 * USER_MAX); // 버퍼를 0으로 초기화
+		set_pollFd(_serverFd, _serverFd, POLLIN, 0);   // pollfd 구조체 배열의 값을 설정하는 함수. 3번째 인자는 해당 파일디스크립터에서 발생 할 수 있는 이벤트. POLLIN은 읽기 가능
+		for (int i = _serverFd + 1; i < USER_MAX; i++) // pollfd 구조체 배열의 나머지 값들을 초기화
+			set_pollFd(i, -1, 0, 0);				   // -1은 사용하지 않는 파일디스크립터를 의미
+		std::memset(_saveBuf, 0, BUF * 2 * USER_MAX);  // 버퍼를 0으로 초기화
 	}
 	catch (const std::runtime_error &e)
 	{
-		// 예외가 발생했을 경우에 리소스 정리
-		if (_serverFd != -1)
-		{
+		if (_serverFd != -1) // 예외가 발생했을 경우에 리소스 정리
 			close(_serverFd);
-		}
 		std::cerr << "Server initialization failed: " << e.what() << std::endl;
-		// throw;  // 예외를 다시 던져서 호출자에게 알림
+		// throw;  // 예외를 다시 던져서 호출자에게 알림 (main 함수에서 예외처리)
 	}
 }
 
 std::list<Channel>::iterator Server::check_Channel(std::string chName)
 {
 	for (_chit = _channels.begin(); _chit != _channels.end(); _chit++)
-	{
 		if (_chit->get_name() == chName)
 			break;
-	}
 	return (_chit);
 }
 
 int Server::accept_client(void)
 {
-	struct sockaddr_in sclient; // 주수정보를 담고있는 타입선언
-	socklen_t sclient_len = sizeof(sclient);
-	int clientFd = accept(_serverFd, (struct sockaddr *)&sclient, &sclient_len); // 서버소켓 큐에 있는 클라이언트의 연결을 수락하고 새로운 파일디스크립터(상담을 위한) 반환
-	if (clientFd == -1)
-	{ //_serverFd는 클라이언트와의 연결(접수)을 위한 파일디스크립터
-		std::cout << "Error: socket connect fail\n";
+	struct sockaddr_in sclient;													 // 클라이언트의 주소를 저장하는 구조체
+	socklen_t sclient_len = sizeof(sclient);									 // 주소의 길이를 저장. 함수의 3번째 인자로 넘겨주기 위함
+	int clientFd = accept(_serverFd, (struct sockaddr *)&sclient, &sclient_len); // 클라이언트의 접속을 기다리는 함수. 2번째 인자는 클라이언트의 주소를 저장하는 구조체
+	if (clientFd == -1)															 // 클라이언트의 접속을 기다리다가 에러가 발생했을 경우
+	{
+		std::cout << "Error: accept fail\n";
 		return (-1);
 	}
 	set_pollFd(clientFd, clientFd, POLLIN | POLLHUP, 0); // 3번째 인자는 해당 파일디스크립터에서 발생 할 수 있는 이벤트
@@ -86,8 +81,13 @@ int Server::read_client(int fd)
 		set_pollFd(fd, -1, 0, 0);//해당 소켓의 파일디스크립터를 무효화,감시 그리고 발생이벤트가 없는것으로 설정해둠
 		std::memset(_saveBuf[fd], 0, BUF * 2);
 		return (1);
+<<<<<<< HEAD
 	} // 데이터의 끝에 해당 문자들이 r,n이 있는지(메시지 수신이 완료) 확인
 	if (_readBuf[r - 2] == '\r' && _readBuf[r - 1] == '\n')
+=======
+	}														// 제대로 읽은 경우
+	if (_readBuf[r - 2] == '\r' && _readBuf[r - 1] == '\n') // Carriage Return을 나타냅니다. 이것은 컴퓨터에서 줄의 시작으로 커서를 이동시키는 명령
+>>>>>>> juny
 	{
 		std::strcat(_saveBuf[fd], _readBuf);
 		std::cout << "========== recv client " << fd << " ==========\n";
