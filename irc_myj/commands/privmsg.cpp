@@ -34,13 +34,26 @@ int Command::privmsg(const Client &sender, const std::list<Channel> &chList)
 		return (-1);
 	}
 	Channel channel = *_conChit;
-	if (!channel.check_client_in_ch(sender.get_nick()))
+	if (!channel.get_allowMsg())
 	{
-		send_fd(sender.get_fd(), ERR_NOTONCHANNEL(sender.get_nick(), chName));
-		return (-1);
+		if (!channel.check_client_in_ch(sender.get_nick()))
+		{
+			send_fd(sender.get_fd(), ERR_NOTONCHANNEL(sender.get_nick(), chName));
+			return (-1);
+		}
+		else
+		{
+			std::vector<int> fds = channel.get_fds(sender.get_fd());
+			send_all(channel.get_fds(sender.get_fd()),
+					 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
+			return (1);
+		}
 	}
-	std::vector<int> fds = channel.get_fds(sender.get_fd());
-	send_all(channel.get_fds(sender.get_fd()),
-			 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
-	return (1);
+	else
+	{
+		std::vector<int> fds = channel.get_fds(sender.get_fd());
+		send_all(channel.get_fds(sender.get_fd()),
+				 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
+		return (1);
+	}
 }

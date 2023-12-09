@@ -40,7 +40,7 @@ void Command::split_msg(void)
 
 int Command::check_msgType(void)
 {
-	std::string typeList[] = {"CONNECT", "PASS", "NICK", "USER", "INVITE", "KICK", "JOIN", "PART", "LIST", "QUIT", "PING", "MODE", "PRIVMSG", "NOTICE"};
+	std::string typeList[] = {"CONNECT", "PASS", "NICK", "USER", "INVITE", "KICK", "JOIN", "PART", "LIST", "QUIT", "PING", "TOPIC", "MODE", "PRIVMSG", "NOTICE"};
 
 	for (size_t i = 0; i < sizeof(typeList) / sizeof(std::string); i++)
 	{
@@ -48,17 +48,29 @@ int Command::check_msgType(void)
 		{
 			switch (i)
 			{
-			case 11:
+			case 12:
 				if (_splitMsg.size() > 2 && _splitMsg[2].find("+o", 0) != std::string::npos)
 					return (OP);
 				else if (_splitMsg.size() > 2 && _splitMsg[2].find("-o", 0) != std::string::npos)
 					return (DEOP);
 				else if (_splitMsg.size() > 2 && _splitMsg[2].find("+i", 0) != std::string::npos)
 					return (MODE_I);
-				else if (_splitMsg.size() > 1 && _splitMsg[1].find("#", 0) != std::string::npos)
+				else if (_splitMsg.size() > 2 && _splitMsg[2].find("-i", 0) != std::string::npos)
+					return (MODE_I);
+				else if (_splitMsg.size() > 2 && (_splitMsg[2].find("+n", 0) != std::string::npos || _splitMsg[2].find("-n", 0) != std::string::npos))
 					return (MODE_N);
+				else if (_splitMsg.size() > 2 && (_splitMsg[2].find("+t", 0) != std::string::npos || _splitMsg[2].find("-t", 0) != std::string::npos))
+					return (MODE_T);
+				else if (_splitMsg.size() > 2 && _splitMsg[2].find("+l", 0) != std::string::npos)
+					return (MODE_L);
+				else if (_splitMsg.size() > 2 && _splitMsg[2].find("-l", 0) != std::string::npos)
+					return (MODE_L);
+				else if (_splitMsg.size() > 2 && _splitMsg[2].find("+k", 0) != std::string::npos)
+					return (MODE_K);
+				else if (_splitMsg.size() > 2 && _splitMsg[2].find("-k", 0) != std::string::npos)
+					return (MODE_K);
 				break;
-			case 12:
+			case 13:
 				if (_splitMsg.size() > 1)
 				{
 					if (_splitMsg[1].find("#", 0) == std::string::npos)
@@ -66,7 +78,7 @@ int Command::check_msgType(void)
 					else
 						return (PRIVCH);
 				}
-			case 13:
+			case 14:
 				if (_splitMsg.size() > 1)
 				{
 					if (_splitMsg[1].find("#", 0) == std::string::npos)

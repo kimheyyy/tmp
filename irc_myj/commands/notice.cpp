@@ -31,12 +31,22 @@ int Command::notice(const Client &sender, const std::list<Channel> &chList)
         return (-1);
     }
     Channel channel = *_conChit;
-    if (channel.check_client_in_ch(sender.get_nick()) == false)
+    if (!channel.get_allowMsg())
+        if (channel.check_client_in_ch(sender.get_nick()) == false)
+        {
+            send_fd(sender.get_fd(), ERR_NOTONCHANNEL(sender.get_nick(), chName));
+            return (-1);
+        }
+        else
+        {
+            std::vector<int> fds = channel.get_fds(sender.get_fd());
+            send_all(fds, RPL_NOTICE(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
+            return (1);
+        }
+    else
     {
-        send_fd(sender.get_fd(), ERR_NOTONCHANNEL(sender.get_nick(), chName));
-        return (-1);
+        std::vector<int> fds = channel.get_fds(sender.get_fd());
+        send_all(fds, RPL_NOTICE(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
+        return (1);
     }
-    std::vector<int> fds = channel.get_fds(sender.get_fd());
-    send_all(fds, RPL_NOTICE(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
-    return (1);
 }
