@@ -1,21 +1,28 @@
 #include "../Command.hpp"
 
-int Command::user(Client &client) {
+int Command::user(Client &client)
+{
 	size_t i;
 
-	if (client.get_status() == S1_CONNECT) {
+	if (client.get_status() == S1_CONNECT)
+	{
 		send_fd(client.get_fd(), ERR_PASSWDMISMATCH);
 		return (-1);
-	} else if (client.get_status() == S2_PASSWORD) {
+	}
+	else if (client.get_status() == S2_PASSWORD)
+	{
 		send_fd(client.get_fd(), ERR_NONICKNAMEGIVEN);
 		return (-1);
-	} else if (client.get_status() == COMPLETED)
+	}
+	else if (client.get_status() == COMPLETED)
 		return (-1);
-	for (i = 0; i < _splitMsg.size(); i++) {
+	for (i = 0; i < _splitMsg.size(); i++)
+	{
 		if (_splitMsg[i].compare("USER") == 0)
 			break;
 	}
-	if (_splitMsg.size() < i + 5) {
+	if (_splitMsg.size() < i + 5)
+	{
 		send_fd(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nick(), "USER"));
 		return (-1);
 	}

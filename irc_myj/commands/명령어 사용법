@@ -12,7 +12,7 @@
 
 7. INVITE: 다른 사용자를 채널에 초대합니다. 형식은 INVITE <nickname> <channel>
 
-8. KICK: 채널에서 사용자를 강제로 퇴출합니다. 형식은 KICK <nickname> <channel> : <reason>
+8. KICK: 채널에서 사용자를 강제로 퇴출합니다. 형식은 KICK  <channel> <nickname> : <reason>
 
 9. LIST: 현재 채널 목록을 보여줍니다. 형식은 LIST
 
