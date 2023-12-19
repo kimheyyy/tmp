@@ -10,7 +10,6 @@
 #include "Channel.hpp"
 #include "Define.hpp"
 
-/* command number */
 #define CONNECT 1
 #define PASS 2
 #define NICK 3
@@ -22,14 +21,18 @@
 #define LIST 9
 #define QUIT 10
 #define PING 11
-#define OP 12
-#define DEOP 13
-#define PRIVMSG 14
-#define PRIVCH 15
-#define NOTICE 16
-#define NOTICE_CH 17
-#define MODE_I 18
-#define MODE_N 19
+#define TOPIC 12
+#define OP 13
+#define DEOP 14
+#define PRIVMSG 15
+#define PRIVCH 16
+#define NOTICE 17
+#define NOTICE_CH 18
+#define MODE_I 19
+#define MODE_N 20
+#define MODE_T 21
+#define MODE_L 22
+#define MODE_K 23
 
 class Command
 {
@@ -56,7 +59,7 @@ public:
     void remove_channel(std::list<Channel> &chList, std::string name);
     void welcome_msg(Client &client);
 
-    /* command list */
+    // command list
     int connect(int fd, std::string pwd, std::list<Client> &cList);
     int pass(Client &client, std::string pwd, std::list<Client> &cList);
     int join(const Client &client, std::list<Channel> &chList);
@@ -68,6 +71,7 @@ public:
     int list(const Client &client, const std::list<Channel> &chList);
     int quit(std::list<Client>::iterator cIt, std::list<Channel> &chList, std::list<Client> &cList);
     int ping(const Client &client);
+    int topic(const Client &sender, const std::list<Channel> &chList);
 
     int op(const Client &client, std::list<Channel> &chList);
     int deop(const Client &client, std::list<Channel> &chList);
@@ -78,10 +82,12 @@ public:
     int notice(const Client &sender, const std::list<Client> &cList);
     int notice(const Client &sender, const std::list<Channel> &chList);
 
-    int modeI(const Client &sender);
+    int modeI(const Client &client, std::list<Channel> &chList);
     int modeN(const Client &sender, const std::list<Channel> &chList);
+    int modeT(const Client &sender, const std::list<Channel> &chList);
+    int modeK(const Client &sender, std::list<Channel> &chList);
+    int modeL(const Client &sender, std::list<Channel> &chList);
     bool is_completed(const Client &sender);
-    bool is_validSize();
 };
 
 #endif

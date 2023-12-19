@@ -38,18 +38,18 @@ int check_arg(int argc, char *argv[])
 }
 
 // 메인 함수
-int main(int argc, char *argv[]) // /a.out 포트번호 비밀번호
+int main(int argc, char *argv[])
 {
     // 인자 확인
-    int portNum = check_arg(argc, argv); // 인자 수 3개, 포트번호가 숫자인지, 포트번호가 1024이상 9999이하인지
+    int portNum = check_arg(argc, argv);
     if (portNum == -1)
         return (1);
 
     // 서버 객체 생성
-    Server server(portNum, argv[2]);
+    Server server(portNum, argv[2]); // 서버 소켓생성,ip와 port번호 변환 및 바인딩,그리고 리스닝 처리 후
     int ret;
-    int serverFd = server.get_serverFd();          // 서버 소켓의 파일 디스크립터 반환
-    struct pollfd *serverPoll = server.get_poll(); // pollfd 구조체 배열 반환 (pollfd 구조체는 파일 디스크립터와 이벤트를 저장하는 구조체)
+    int serverFd = server.get_serverFd();
+    struct pollfd *serverPoll = server.get_poll(); // pollfd 구조체 배열 반환
 
     // 서버 시작 메시지 출력
     std::cout << "     __        __   _                          _         \n";
@@ -67,19 +67,25 @@ int main(int argc, char *argv[]) // /a.out 포트번호 비밀번호
     // 이벤트 루프
     while (1)
     {
-        ret = poll(serverPoll, 100, 500); // poll 함수를 호출하여 이벤트가 발생했는지 확인
-        if (ret > 0)                      // 이벤트가 발생했을 경우
+        // poll 함수를 사용하여 100개의 파일 디스크립터(서버 소켓,클라이언트 소켓) 배열을 감시하다가 500동안 이벤트가 발생한 파일 디스크립터의 수를 반환
+        ret = poll(serverPoll, 100, 500);
+        if (ret > 0) // 이벤트가 발생했을 경우
         {
-            if (serverPoll[serverFd].revents & POLLIN) // 서버 소켓에 이벤트가 발생했는지 확인
+            // 서버 소켓에서 이벤트가 발생했는지 확인
+            if (serverPoll[serverFd].revents & POLLIN) // 열어놓은 포트에 클라이언트가 접근하면 revnts필드가 POLLIN으로 설정됨
             {
-                if (server.accept_client() == 1) // 클라이언트가 접속했을 경우
-                    ret--;                       // 이벤트 발생 횟수 감소
+                // 클라이언트 연결 요청 처리
+                if (server.accept_client() == 1)
+                    ret--;
             }
-            for (int i = serverFd + 1; i < USER_MAX && ret > 0; i++) // 모든 클라이언트에 대해서 이벤트가 발생했는지 확인
+            // 모든 클라이언트 소켓을 순회하면서 이벤트 확인
+            for (int i = serverFd + 1; i < USER_MAX && ret > 0; i++)
             {
-                if (serverPoll[i].revents & POLLIN || serverPoll[i].revents & POLLHUP) // 데이터 수신(POLLIN) 또는 연결 종료(POLLUP) 확인
+                // 데이터 수신 이벤트 또는 연결 종료 이벤트가 발생했는지 확인
+                if (serverPoll[i].revents & POLLIN || serverPoll[i].revents & POLLHUP)
                 {
-                    if (server.read_client(i) == 1) // 클라이언트가 데이터를 보냈을 경우
+                    // 클라이언트로부터 데이터 읽기
+                    if (server.read_client(i) == 1)
                         ret--;
                 }
             }

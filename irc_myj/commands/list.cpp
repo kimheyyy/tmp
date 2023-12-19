@@ -1,6 +1,7 @@
 #include "../Command.hpp"
 
-int Command::list(const Client &client, const std::list<Channel> &chList) {
+int Command::list(const Client &client, const std::list<Channel> &chList)
+{
 	if (client.get_status() != COMPLETED)
 		return (-1);
 	int cFd = client.get_fd();
