@@ -60,9 +60,13 @@ int Server::accept_client(void)
 	}
 	set_pollFd(clientFd, clientFd, POLLIN | POLLHUP, 0); // 3번째 인자는 해당 파일디스크립터에서 발생 할 수 있는 이벤트
 	_poll[_serverFd].revents = 0;						 // 서버소켓에서 수행한 이벤트는 다시 초기화
-	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1)		 // fcntl은 파일디스크립터를 제어하는 시스템 콜함수
-		;												 // 해당 파일디스크립터가 블로킹 되지않도록 설정 -> 데이터를 읽거나 쓸떄 특정 클라이언트 입력이 완료되지 않아도 서버가 다른 작업을 수행가능(여러 클라이언트의 입력에 대한 병렬처리 가능)
-	return (1);
+	if (fcntl(clientFd, F_SETFL, O_NONBLOCK) == -1) {
+    // fcntl 호출이 실패했을 경우의 처리
+    std::cerr << "Error: Failed to set file descriptor to non-blocking mode\n";
+    return -1; // 오류 코드 반환
+} 
+// 해당 파일디스크립터가 블로킹 되지않도록 설정 -> 데이터를 읽거나 쓸떄 특정 클라이언트 입력이 완료되지 않아도 서버가 다른 작업을 수행가능(여러 클라이언트의 입력에 대한 병렬처리 가능)
+return 1;
 }
 
 int Server::read_client(int fd)
@@ -100,6 +104,8 @@ int Server::read_client(int fd)
 		std::strcat(_saveBuf[fd], _readBuf);
 	return (1);
 }
+
+
 
 void Server::execute_command(int fd)
 {

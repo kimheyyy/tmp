@@ -1,6 +1,7 @@
 #include <poll.h>
 #include <fcntl.h>
 #include <iostream>
+#include <cstdlib>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -27,7 +28,7 @@ int check_arg(int argc, char *argv[])
         }
     }
     // 포트 번호가 1024 이상 9999 이하인지 확인
-    int portNum = std::atoi(argv[1]);
+   	int portNum = atoi(argv[1]);
     if (portNum < 1024 || portNum > 9999)
     {
         std::cout << "Error : Check port num\n";

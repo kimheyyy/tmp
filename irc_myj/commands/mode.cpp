@@ -139,7 +139,7 @@ int Command::modeL(const Client &sender, std::list<Channel> &chList)
     {
         if (_splitMsg.size() < 4)
             return (-1);
-        int limit = std::stoi(_splitMsg[3]);
+       	int limit = atoi(_splitMsg[3].c_str());
         channel.setUserLimit(limit); // 사용자 수 제한 설정
         send_fd(cFd, RPL_MODE_L(sender.get_nick(), chName, _splitMsg[3]));
     }

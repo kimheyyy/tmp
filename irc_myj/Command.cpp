@@ -78,6 +78,7 @@ int Command::check_msgType(void)
 					else
 						return (PRIVCH);
 				}
+				break;
 			case 14:
 				if (_splitMsg.size() > 1)
 				{
@@ -86,6 +87,7 @@ int Command::check_msgType(void)
 					else
 						return (NOTICE_CH);
 				}
+				break; 
 			default:
 				return (i + 1);
 			}

@@ -4,7 +4,10 @@
 #include <list>
 #include <ctype.h>
 #include <unistd.h>
+#include <cstdlib>
 #include <sys/socket.h>
+#include <algorithm>
+#include <sstream>
 
 #include "Client.hpp"
 #include "Channel.hpp"
