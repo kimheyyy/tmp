@@ -3,7 +3,7 @@
 
 int Command::privmsg(const Client &sender, const std::list<Client> &cList)
 {
-	if (_splitMsg.size() < 2)
+	if (_splitMsg.size() < 3)
 		return (-1);
 	else if (sender.get_status() != COMPLETED)
 	{

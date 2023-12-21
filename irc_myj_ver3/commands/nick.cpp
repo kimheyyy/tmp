@@ -17,19 +17,22 @@ int Command::nick(Client &client, std::list<Client> &cList, const std::list<Chan
 	for (i = 0; i < _splitMsg.size(); i++)
 	{
 		if (_splitMsg[i].compare("NICK") == 0)
-		{								 // 해당 명령어 발견하면
-			nickName = _splitMsg[i + 1]; // 그 다음 문자열 챙기고
-			break;
+		{ // 해당 명령어 발견하면
+			if (i + 1 < _splitMsg.size())
+			{
+				nickName = _splitMsg[i + 1]; // 그 다음 문자열 챙기고
+				break;
+			}
 		}
 	}
-	if (client.get_status() == DUPDUP && client.get_user().compare("") != 0)
+	/*if (client.get_status() == DUPDUP && client.get_user().compare("") != 0)
 	{
 		if (check_nick(nickName, cList, cFd) == -1)
 			return (-1);
 		client.set_nick(nickName);
 		welcome_msg(client);
 		return (1);
-	}
+	}*/
 	if (client.get_status() == S2_PASSWORD)
 	{
 		if (check_nick(nickName, cList, cFd) == -1)

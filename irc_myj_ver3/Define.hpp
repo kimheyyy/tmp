@@ -100,4 +100,6 @@
 #define ERR_USERSDONTMATCH(nick) ":HI_IRC 502 " + nick + " :Cant change mode for other users\r\n"
 #define ERR_FLOOD(sec) ":HI_IRC 504 * :flood detected, please wait " + sec + " seconds\r\n"
 
+#define ERR_NOKEY(nick, channelName) ":PPL_IRC 696 " + nick + " " + channelName + " k * :You must specify a parameter for the key mode. Syntax: <key>.\r\n"
+
 #endif

@@ -19,7 +19,7 @@ int Command::pass(Client &client, std::string pwd, std::list<Client> &cList)
 		if (_splitMsg[i].compare("NICK") == 0)
 		{
 			std::list<Channel> chList;
-			nick (cList.back(), cList, chList);
+			nick(cList.back(), cList, chList);
 			break;
 		}
 	}

@@ -25,13 +25,13 @@ int Command::topic(const Client &sender, const std::list<Channel> &chList)
                 return (-1);
             }
             channel.set_topic(_splitMsg[2]); // 주제 설정
-            send_fd(cFd, RPL_TOPIC(sender.get_nick(), chName, _splitMsg[2]));
         }
         else
         {
             channel.set_topic(_splitMsg[2]); // 주제 설정
-            send_fd(cFd, RPL_TOPIC(sender.get_nick(), chName, _splitMsg[2]));
         }
+        send_all(channel.get_fds(cFd), RPL_TOPIC(sender.get_nick(), chName, _splitMsg[2]));
+        send_fd(cFd, RPL_TOPIC(sender.get_nick(), chName, _splitMsg[2]));
     }
     else
     {

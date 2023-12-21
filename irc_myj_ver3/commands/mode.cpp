@@ -111,6 +111,11 @@ int Command::modeK(const Client &sender, std::list<Channel> &chList)
     Channel &channel = const_cast<Channel &>(*_conChit);
     if (_splitMsg[2] == "+k")
     {
+        if (_splitMsg.size() < 4) // 비밀번호가 제공되지 않았을 때의 처리
+        {
+            send_fd(cFd, ERR_NOKEY(sender.get_nick(), chName));
+            return (-1);
+        }
         channel.setPassword(_splitMsg[3]); // 비밀번호 설정
         send_fd(cFd, RPL_MODE_K(sender.get_nick(), chName, _splitMsg[3]));
     }
@@ -121,10 +126,9 @@ int Command::modeK(const Client &sender, std::list<Channel> &chList)
     }
     return (1);
 }
-
 int Command::modeL(const Client &sender, std::list<Channel> &chList)
 {
-    if (!(_splitMsg.size() > 2) || !is_completed(sender))
+    if (!(_splitMsg.size() > 3) || !is_completed(sender))
         return (-1);
     std::string chName = _splitMsg[1];
     int cFd = sender.get_fd();
@@ -139,7 +143,7 @@ int Command::modeL(const Client &sender, std::list<Channel> &chList)
     {
         if (_splitMsg.size() < 4)
             return (-1);
-       	int limit = atoi(_splitMsg[3].c_str());
+        int limit = atoi(_splitMsg[3].c_str());
         channel.setUserLimit(limit); // 사용자 수 제한 설정
         send_fd(cFd, RPL_MODE_L(sender.get_nick(), chName, _splitMsg[3]));
     }
