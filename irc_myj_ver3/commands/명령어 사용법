@@ -1,0 +1,34 @@
+1. CONNECT: 서버에 연결합니다. 형식은 CONNECT
+
+2. PASS: 비밀번호를 입력합니다. 형식은 PASS <password>
+
+3. NICK: 닉네임을 설정합니다. 형식은 NICK <nickname>
+
+4. USER: 사용자 정보를 설정합니다. 형식은 USER <username> <hostname> < servername> : <realname>
+
+5. JOIN: 채널에 참가합니다. 형식은 JOIN <channel>
+
+6. PART: 채널에서 나갑니다. 형식은 PART <channel>
+
+7. INVITE: 다른 사용자를 채널에 초대합니다. 형식은 INVITE <nickname> <channel>
+
+8. KICK: 채널에서 사용자를 강제로 퇴출합니다. 형식은 KICK  <channel> <nickname> : <reason>
+
+9. LIST: 현재 채널 목록을 보여줍니다. 형식은 LIST
+
+10. QUIT: 서버에서 나갑니다. 형식은 QUIT
+
+11. PING: 서버에 핑을 보냅니다. 형식은 PING <message>
+
+12. MODE: 채널의 모드를 변경합니다. 형식은 MODE <channel> <mode>
+    12-1 MODE #channel +/-o nickname: 연산자 권한
+    12-2 MODE #channel  +/-l number/"": 채널의 참가자수 제한
+    12-3 MODE #channel +/-k password: 채널의 비밀번호 설정
+    12-4 MODE #channel +/-t: 체널의 주제 보호모드
+    12-5 MODE #channel +/-i: 초대받은 사용자만 참여가능여부
+    12-6 MODE #channel +/-n: 외부의 메시지 허용여부
+
+13. PRIVMSG: 다른 사용자에게 개인 메시지를 보냅니다. 형식은 PRIVMSG <nickname> <message>/PRIVMSG <channel> <message>
+
+14. NOTICE: 다른 사용자에게 공지사항을 보냅니다. 형식은 NOTICE <nickname> <message>
+    14-1 NOTICE <channel> <message>
