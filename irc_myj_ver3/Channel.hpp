@@ -69,6 +69,7 @@ public:
     void setPassword(const std::string &newPassword);
     void removePassword();
     bool check_password(const std::string &password);
+    bool hasPassword() const;
 
     void setUserLimit(int limit);
     void removeUserLimit();

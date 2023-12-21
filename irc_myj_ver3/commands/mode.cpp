@@ -121,8 +121,13 @@ int Command::modeK(const Client &sender, std::list<Channel> &chList)
     }
     else if (_splitMsg[2] == "-k")
     {
+        if (!channel.hasPassword()) // 비밀번호가 설정되어 있는지 확인
+        {
+            send_fd(cFd, ERR_NOPASSWORDSET(sender.get_nick(), chName));
+            return (-1);
+        }
         channel.removePassword(); // 비밀번호 제거
-        send_fd(cFd, RPL_MODE_K(sender.get_nick(), chName, _splitMsg[3]));
+        send_fd(cFd, RPL_MODE_K(sender.get_nick(), chName, "Password removed"));
     }
     return (1);
 }

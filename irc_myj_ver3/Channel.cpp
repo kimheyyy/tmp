@@ -187,6 +187,11 @@ bool Channel::check_password(const std::string &password) // const 괄호뒤에�
     return _password == password;
 }
 
+bool Channel::hasPassword() const
+{
+    return !_password.empty();
+}
+
 void Channel::setUserLimit(int limit)
 {
     _userLimit = limit;

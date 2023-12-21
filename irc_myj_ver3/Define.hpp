@@ -93,6 +93,7 @@
 #define ERR_CHANNELISFULL(nick, channel) ":HI_IRC 471 " + nick + " " + channel + " :Cannot join channel, it's full\r\n"
 #define ERR_UNKNOWNMODE(nick, flags) ":HI_IRC 472 " + nick + " " + flags + " :is unknown mode char to me\r\n"
 #define ERR_INVITEONLYCHAN(nick, channel) ":HI_IRC 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n"
+#define ERR_NOPASSWORDSET(nick, channel) ":HI_IRC 480 " + nick + " " + channel + " :No password is set\r\n"
 #define ERR_NOPRIVILEGES(nick) ":HI_IRC 481 " + nick + " :Permission Denied- You're not an IRC operator\r\n"
 #define ERR_CHANOPRIVSNEEDED(nick, channel) ":HI_IRC 482 " + nick + " " + channel + " :You're not channel operator\r\n"
 #define ERR_NOOPERHOST(nick) ":HI_IRC 491 " + nick + " :No O-lines for your host\r\n"

@@ -4,7 +4,7 @@
   while IFS= read -r line; do # IFS는 입력(이 스크립트 실행시 사용자의) 필드 구분자입니다. 이 라인은 입력에서 한 줄씩 읽습니다.
     printf '%s\r\n' "$line" # 위에서 line에 입력된 한 줄을 파이프로 출력
   done # while 루프의 끝
-} | nc localhost 1111 # nc 명령어는 localhost의 1111 포트로 데이터를 전송합니다.
+} | nc localhost 11112 # nc 명령어는 localhost의 1111 포트로 데이터를 전송합니다.
 
 # - IFS=: IFS는 'Internal Field Separator'의 약자로, 입력된 데이터를 분리하는 데 사용되는 구분자를 정의합니다. IFS=로 설정하면, read 명령어는 공백이나 탭과 같은 기본 구분자를 무시하고 전체 라인을 하나의 문자열로 읽습니다.
 #- -r: 이 옵션은 read가 백슬래시(\)를 이스케이프 문자로 해석하지 않도록 합니다. 즉, 백슬래시가 포함된 문자열을 그대로 읽을 수 있게 해줍니다.
