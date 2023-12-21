@@ -67,6 +67,8 @@ int Server::accept_client(void)
 		return -1; // 오류 코드 반환
 	}
 	// 해당 파일디스크립터가 블로킹 되지않도록 설정 -> 데이터를 읽거나 쓸떄 특정 클라이언트 입력이 완료되지 않아도 서버가 다른 작업을 수행가능(여러 클라이언트의 입력에 대한 병렬처리 가능)
+	Client nClient("", "", "", clientFd, S1_CONNECT); // Client 객체 생성
+	_clients.push_back(nClient);			 // 목록에 추가
 	return 1;
 }
 
@@ -124,7 +126,7 @@ void Server::execute_command(int fd, Command &com)
 		com.connect(fd, _pwd, _clients);
 		break;*/
 	case PASS:
-		com.pass(fd, _pwd, _clients);
+		com.pass((*_cit), _pwd, _clients);
 		break;
 	case NICK:
 		com.nick((*_cit), _clients, _channels);

@@ -65,7 +65,7 @@ public:
 
     // command list
     int connect(int fd, std::string pwd, std::list<Client> &cList);
-    int pass(int fd, std::string pwd, std::list<Client> &cList);
+    int pass(Client &client, std::string pwd, std::list<Client> &cList);
     int join(int fd, const Client &client, std::list<Channel> &chList);
     int part(const Client &client, std::list<Channel> &chList);
     int invite(const Client &client, std::list<Channel> &chList, const std::list<Client> &cList);
