@@ -133,7 +133,7 @@ int Command::modeK(const Client &sender, std::list<Channel> &chList)
 }
 int Command::modeL(const Client &sender, std::list<Channel> &chList)
 {
-    if (!(_splitMsg.size() > 3) || !is_completed(sender))
+    if (!(_splitMsg.size() > 2) || !is_completed(sender))
         return (-1);
     std::string chName = _splitMsg[1];
     int cFd = sender.get_fd();
