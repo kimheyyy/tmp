@@ -7,7 +7,7 @@ int Command::quit(std::list<Client>::iterator cIt, std::list<Channel> &chList, s
     if (!is_completed(*cIt) || cIt == cList.end())
         return (-1);
     std::string nick = cIt->get_nick();
-    std::string ip = cIt->get_ip();
+    std::string ip = cIt->get_servername();
     int fd = cIt->get_fd();
     for (_chit = chList.begin(); _chit != chList.end();)
     {

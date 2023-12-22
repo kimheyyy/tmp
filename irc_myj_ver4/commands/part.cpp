@@ -19,8 +19,8 @@ int Command::part(const Client &client, std::list<Channel> &chList)
         send_fd(client.get_fd(), ERR_USERNOTINCHANNEL(client.get_nick(), client.get_nick(), chName));
         return (-1);
     }
-    send_fd(client.get_fd(), RPL_PART(client.get_nick(), client.get_ip(), chName));
-    send_all(channel.get_fds(client.get_fd()), RPL_PART(client.get_nick(), client.get_ip(), chName));
+    send_fd(client.get_fd(), RPL_PART(client.get_nick(), client.get_servername(), chName));
+    send_all(channel.get_fds(client.get_fd()), RPL_PART(client.get_nick(), client.get_servername(), chName));
     channel.rm_user(client.get_nick()); // 해당 클라이언트를 채널에서 제거
     return (1);
 }

@@ -28,8 +28,8 @@ int Command::kick(const Client &client, std::list<Channel> &chList)
 	std::string msg = "";
 	if (_splitMsg.size() > 3)
 		msg = _splitMsg[3];
-	send_fd(client.get_fd(), RPL_KICK(client.get_nick(), client.get_nick(), client.get_ip(), chName, target, msg));
-	send_all(channel.get_fds(client.get_fd()), RPL_KICK(client.get_nick(), client.get_nick(), client.get_ip(), chName, target, msg));
+	send_fd(client.get_fd(), RPL_KICK(client.get_nick(), client.get_nick(), client.get_servername(), chName, target, msg));
+	send_all(channel.get_fds(client.get_fd()), RPL_KICK(client.get_nick(), client.get_nick(), client.get_servername(), chName, target, msg));
 	channel.rm_byNick(target); // 해당 클라이언트를 체널에서 제거
 	channel.removeInvite(target);
 	if (channel.get_userSize() == 0) // 채널에 더 이상 유저가 없으면

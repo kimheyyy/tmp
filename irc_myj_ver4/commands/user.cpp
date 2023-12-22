@@ -31,8 +31,9 @@ int Command::user(Client &client)
 		send_fd(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nick(), "USER"));
 		return (-1);
 	}
-	client.set_user(_splitMsg[i + 4].erase(0, 1));
-	client.set_ip(_splitMsg[i + 3]);
+	client.set_realname(_splitMsg[i + 4].erase(0, 1));
+	client.set_servername(_splitMsg[i + 3]);
+	client.set_hostname(_splitMsg[i + 2]);
 	if (client.get_status() == S3_NICK)
 	{
 		client.set_flag(COMPLETED);

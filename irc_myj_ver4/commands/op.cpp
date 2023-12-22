@@ -32,7 +32,7 @@ int Command::op(const Client &client, std::list<Channel> &chList)
     else
     {
         channel.op_user(nick);
-        msg = RPL_OP(client.get_nick(), client.get_nick(), client.get_ip(), chName, nick);
+        msg = RPL_OP(client.get_nick(), client.get_nick(), client.get_servername(), chName, nick);
         send_all(channel.get_fds(cFd), msg);
     }
     send_fd(cFd, msg);
@@ -72,7 +72,7 @@ int Command::deop(const Client &client, std::list<Channel> &chList)
     else
     {
         channel.deop_user(nick);
-        msg = RPL_DEOP(client.get_nick(), client.get_nick(), client.get_ip(), chName, nick);
+        msg = RPL_DEOP(client.get_nick(), client.get_nick(), client.get_servername(), chName, nick);
         send_all(channel.get_fds(cFd), msg);
     }
     send_fd(cFd, msg);

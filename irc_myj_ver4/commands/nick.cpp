@@ -30,7 +30,7 @@ int Command::nick(Client &client, std::list<Client> &cList, const std::list<Chan
 			}
 		}
 	}
-	/*if (client.get_status() == DUPDUP && client.get_user().compare("") != 0)
+	/*if (client.get_status() == DUPDUP && client.get_realname().compare("") != 0)
 	{
 		if (check_nick(nickName, cList, cFd) == -1)
 			return (-1);
@@ -85,7 +85,7 @@ int Command::nick(Client &client, std::list<Client> &cList, const std::list<Chan
 		}
 		sort(mList.begin(), mList.end());
 		mList.erase(unique(mList.begin(), mList.end()), mList.end()); // 중복요소 제거
-		msg = RPL_NICK(client.get_nick(), client.get_nick(), client.get_ip(), nickName);
+		msg = RPL_NICK(client.get_nick(), client.get_nick(), client.get_servername(), nickName);
 		send_fd(cFd, msg);
 		send_all(mList, msg); // 벡터에 있는 클라이언트에게 모두 메시지 전송
 	}

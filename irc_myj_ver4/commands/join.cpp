@@ -33,7 +33,7 @@ int Command::join(int fd, const Client &client, std::list<Channel> &chList)
 			}
 			_chit->add_user(client);
 			std::vector<int> fds = _chit->get_fds(client.get_fd());
-			send_all(fds, RPL_JOIN(client.get_nick(), client.get_ip(), chName));
+			send_all(fds, RPL_JOIN(client.get_nick(), client.get_hostname(), client.get_servername(), chName));
 			userNames = _chit->get_usersNames();
 			break;
 		}
@@ -44,7 +44,7 @@ int Command::join(int fd, const Client &client, std::list<Channel> &chList)
 		chList.push_back(ch);
 		userNames = ch.get_usersNames();
 	}
-	send_fd(client.get_fd(), RPL_JOIN(client.get_nick(), client.get_ip(), chName));
+	send_fd(client.get_fd(), RPL_JOIN(client.get_nick(), client.get_hostname(), client.get_servername(), chName));
 	send_fd(client.get_fd(), RPL_NAMREPLY(client.get_nick(), chName, userNames));
 	send_fd(client.get_fd(), RPL_ENDOFNAMES(client.get_nick(), chName));
 	return (1);

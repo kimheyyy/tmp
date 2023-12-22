@@ -1,10 +1,9 @@
-1. CONNECT: 서버에 연결합니다. 형식은 CONNECT
 
 2. PASS: 비밀번호를 입력합니다. 형식은 PASS <password>
 
 3. NICK: 닉네임을 설정합니다. 형식은 NICK <nickname>
 
-4. USER: 사용자 정보를 설정합니다. 형식은 USER <username> <hostname> < servername> : <realname>
+4. USER: 사용자 정보를 설정합니다. 형식은 USER <nickname> <hostname> < servername> : <realname>
 
 5. JOIN: 채널에 참가합니다. 형식은 JOIN <channel>
 

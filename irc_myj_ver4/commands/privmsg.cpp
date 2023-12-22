@@ -16,7 +16,7 @@ int Command::privmsg(const Client &sender, const std::list<Client> &cList)
 		send_fd(sender.get_fd(), ERR_NOSUCHNICK(sender.get_nick(), cName));
 		return (-1);
 	}
-	send_fd(_conCit->get_fd(), RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_ip(), cName, _splitMsg[2]));
+	send_fd(_conCit->get_fd(), RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_servername(), cName, _splitMsg[2]));
 	return (1);
 }
 
@@ -45,7 +45,7 @@ int Command::privmsg(const Client &sender, const std::list<Channel> &chList)
 		{
 			std::vector<int> fds = channel.get_fds(sender.get_fd());
 			send_all(channel.get_fds(sender.get_fd()),
-					 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
+					 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_servername(), chName, _splitMsg[2]));
 			return (1);
 		}
 	}
@@ -53,7 +53,7 @@ int Command::privmsg(const Client &sender, const std::list<Channel> &chList)
 	{
 		std::vector<int> fds = channel.get_fds(sender.get_fd());
 		send_all(channel.get_fds(sender.get_fd()),
-				 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_ip(), chName, _splitMsg[2]));
+				 RPL_PRIVMSG(sender.get_nick(), sender.get_nick(), sender.get_servername(), chName, _splitMsg[2]));
 		return (1);
 	}
 }

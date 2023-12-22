@@ -12,7 +12,7 @@
 #define RPL_YOURHOST(nick) ":HI_IRC 002 " + nick + " :Your host is HI_IRC, running version 1.2\r\n"
 
 // JOIN [353 - 366]
-#define RPL_JOIN(nick, ip, channel) ":" + nick + "!" + nick + "@" + ip + " JOIN " + channel + "\r\n"
+#define RPL_JOIN(nick, hostname, servername, channel) ":" + nick + "!" + hostname + "@" + servername + " JOIN " + channel + "\r\n"
 #define RPL_NAMREPLY(nick, channel, users) ":HI_IRC 353 " + nick + " = " + channel + " :" + users + "\r\n"
 #define RPL_ENDOFNAMES(nick, channel) ":HI_IRC 366 " + nick + " " + channel + " :End of /NAMES list\r\n"
 
