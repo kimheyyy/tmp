@@ -2,6 +2,11 @@
 
 int Command::nick(Client &client, std::list<Client> &cList, const std::list<Channel> &chList)
 {
+	if (_splitMsg.size() < 2)
+	{
+		send_fd(client.get_fd(), ERR_NONICKNAMEGIVEN);
+		return (-1);
+	}
 	std::vector<int> mList;
 	std::vector<int> temp;
 	std::string msg;

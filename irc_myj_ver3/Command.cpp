@@ -11,34 +11,32 @@ Command::Command(std::string msg)
 
 void Command::split_msg(void)
 {
-	std::string::size_type pos = _msg.find(" ", 0);
-	std::string::size_type newpos = _msg.find("\r\n", 0);
-	std::string::size_type colon = _msg.find(":", 0);
-	std::string::size_type i = 0; // 'int' 대신 'std::string::size_type' 사용
+	_splitMsg.clear();
 
-	while (pos != std::string::npos || newpos != std::string::npos)
+	// 첫 번째 콜론이 있으면 그 뒤의 첫 번째 공백까지 무시
+	std::string::size_type start = 0;
+	if (_msg[start] == ':')
 	{
-		if (newpos != std::string::npos && (pos == std::string::npos || pos > newpos))
-		{
-			_splitMsg.push_back(_msg.substr(i, newpos - i));
-			i = newpos + 2;
-		}
-		else if (pos != std::string::npos)
-		{
-			_splitMsg.push_back(_msg.substr(i, pos - i));
-			i = pos + 1;
-		}
-		pos = _msg.find(" ", i);
-		newpos = _msg.find("\r\n", i);
+		start = _msg.find(" ", 0);
+		if (start != std::string::npos)
+			start++;
 	}
 
-	if (colon != std::string::npos && colon > i)
+	// 명령어와 파라미터 파싱
+	while (start < _msg.length() && start != std::string::npos)
 	{
-		_splitMsg.push_back(_msg.substr(colon + 1));
-	}
-	else if (i < _msg.length())
-	{
-		_splitMsg.push_back(_msg.substr(i));
+		std::string::size_type end = _msg.find(" ", start);
+		if (end == std::string::npos)
+		{
+			end = _msg.find("\r\n", start);
+			if (end == std::string::npos)
+			{
+				end = _msg.length();
+			}
+		}
+
+		_splitMsg.push_back(_msg.substr(start, end - start));
+		start = end + 1;
 	}
 }
 
@@ -48,7 +46,7 @@ int Command::check_msgType(void)
 
 	for (size_t i = 0; i < sizeof(typeList) / sizeof(std::string); i++)
 	{
-		if (_splitMsg.size() > 0 && _splitMsg[0].find(typeList[i]) != std::string::npos)
+		if (_splitMsg.size() > 0 && _splitMsg[0].compare(typeList[i]) == 0)
 		{
 			switch (i)
 			{

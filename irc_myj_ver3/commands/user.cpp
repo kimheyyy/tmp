@@ -2,6 +2,11 @@
 
 int Command::user(Client &client)
 {
+	if (_splitMsg.size() < 5)
+	{
+		send_fd(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nick(), ""));
+		return (-1);
+	}
 	size_t i;
 
 	if (client.get_status() == S1_CONNECT)

@@ -68,11 +68,11 @@ int Server::accept_client(void)
 	}
 	// 해당 파일디스크립터가 블로킹 되지않도록 설정 -> 데이터를 읽거나 쓸떄 특정 클라이언트 입력이 완료되지 않아도 서버가 다른 작업을 수행가능(여러 클라이언트의 입력에 대한 병렬처리 가능)
 	Client nClient("", "", "", clientFd, S1_CONNECT); // Client 객체 생성
-	_clients.push_back(nClient);			 // 목록에 추가
+	_clients.push_back(nClient);					  // 목록에 추가
 	return 1;
 }
 
-int Server::read_client(int fd) // TODO: recv가 한번 밖에 반응 안하네?
+int Server::read_client(int fd)
 {
 	std::memset(_readBuf, 0, BUF);				   // readbuf초기화
 	int r = recv(fd, _readBuf, BUF, MSG_DONTWAIT); // 논블로킹으로 입력으로 들어온 fd(소켓)의 데이터를 버퍼로 읽어옴
@@ -105,7 +105,7 @@ int Server::read_client(int fd) // TODO: recv가 한번 밖에 반응 안하네?
 	{
 		std::string command = saveBufStr.substr(0, pos);
 		std::memset(_readBuf, 0, BUF);
-		std::copy(command.begin(), command.end(), _readBuf);
+		// std::copy(command.begin(), command.end(), _readBuf);
 		std::cout << "========== recv client " << fd << " ==========\n";
 		std::cout << command << "\n\n";
 		Command com(command);
