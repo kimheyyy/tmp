@@ -7,7 +7,8 @@ RUN apt-get install -y php
 RUN apt-get install -y php-mysql
 #압축도구 설치
 RUN apt-get install -y tar
-RUN apt-get install -y php-fpm7
+
+RUN apt-get install -y php7.3-fpm
 # 파일다운 도구 설치
 RUN apt-get install -y wget
 
