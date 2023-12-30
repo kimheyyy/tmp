@@ -1,0 +1,74 @@
+# docker-comopse version (docker version beyond 19.03.0+ <-> compose version 3.8v)
+version: "3.8"
+
+# definition fo services
+services:
+  # nginx
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    image: nginx
+    ports:
+      - "443:443"
+    restart: always
+    depends_on:
+      - wordpress
+    networks:
+      - inception_network
+    env_file:
+      - .env
+    volumes:
+      - volume_wordpress:/var/www/wordpress
+
+  # wordpress
+  wordpress:
+    depends_on:
+      - mariadb
+    build: ./requirements/wordpress
+    container_name: wordpress
+    image: wordpress
+    ports:
+      - "9000:9000"
+    restart: always
+    networks:
+      - inception_network
+    env_file:
+      - .env
+    volumes:
+      - volume_wordpress:/var/www/wordpress
+
+  # mariadb
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    image: mariadb
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - inception_network
+    env_file:
+      - .env
+    volumes:
+      - volume_mariadb:/var/lib/mysql
+
+# definition fo network
+networks:
+  inception_network:
+    driver: bridge
+
+# definition fo volumes
+volumes:
+  # maridb volume
+  volume_mariadb:
+    driver_opts:
+      device: /home/hwankim/data/database
+      type: volume
+      o: bind
+
+  # wordpress volume
+  volume_wordpress:
+    driver_opts:
+      device: /home/hwankim/data/wordpress
+      type: volume
+      o: bind
